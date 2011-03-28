@@ -10,51 +10,69 @@ li = [
   [805, 732, 524, 37, 331],
 ]
 
-#li = [[int(l) for l in line.split(',')] for line in open("matrix.txt") ]
+#li = [[int(l) for l in line.split(',')] for line in open("txt/matrix.txt") ]
 
-def get_graph(li):
-  g = defaultdict(list)
-  dim = len(li)
-  for i in range(dim):
+dim = len(li)
+
+cost = [0] * dim
+
+for i in range(dim):
+    print range(dim)
     for j in range(dim):
-      x = li[i][j]
-      if i != 0: g[x].append(li[i-1][j]) # move up
-      if i < dim-1: g[x].append(li[i+1][j]) # move down 
-      if j < dim-1: g[x].append(li[i][j+1]) # move right
-  return g
+        cost[j] = min(cost[j], cost[j-1]) + li[j][i]
+        print i, j, cost
+    print list(reversed(range(dim-2)))
+    for j in reversed(range(dim-2)):
+        cost[j] = min(cost[j], cost[j+1] + li[j][i])
+        print i, j, cost
+    raw_input()
 
-def nmin(q, d):
-  m = d[q[0]]
-  r = q[0]
-  for n in q:
-    if d[n] < m:
-      m = d[n]
-      r = n
-  return r
+print cost
+print min(cost)
 
-def dijkstra(g, src):
-  d = defaultdict(lambda: 1e308)
-  p = dict()
-  for v in g:
-    d[v] = 1e308
-    p[v] = -1
-  d[src] = 0
-  q = g.keys()
-  while len(q) != 0:
-    u = nmin(q, d)
-    q.remove(u)
-    for v in g[u]:
-      if not v in q: continue
-      alt = d[u] + v
-      if alt < d[v]:
-        d[v] = alt
-        p[v] = u
-  return p
-    
-x = copy.deepcopy(li)
 
-import pprint
-pprint.pprint(x)
+def f():
+    for i in range(dim):
+        #print li[i][dim-1]
+        j = dim-1
+        k = i
+        sum = 0
+        while j >= 0:
+            print k, j
+            if j == 0:
+                sum += li[k][0]
+                j -= 1
+            elif j == dim-1:
+                sum += li[k][j-1]
+                j -= 1
+            elif k == 0:
+                m = min(li[k][j-1], li[k+1][j])
+                sum += m
+                if m == li[k+1][j]:
+                    k += 1
+                else:
+                    j -= 1
+            elif k == dim-1:
+                m = min(li[k][j-1], li[k-1][j])
+                sum += m
+                if m == li[k][j-1]:
+                    j -= 1
+                else:
+                    k -= 1
+            else:
+                m = min(li[k][j-1], li[k-1][j], li[k+1][j])
+                sum += m
+                if m == li[k][j-1]:
+                    j -= 1
+                elif m == li[k-1][j]:
+                    k -= 1
+                else:
+                    k += 1
 
-g = get_graph(li)
-pprint.pprint(dijkstra(g, 131)) 
+            raw_input()
+        print sum
+        li[i][dim-1] = sum
+
+    print li
+
+

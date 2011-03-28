@@ -9,7 +9,7 @@ li = [
   [805, 732, 524, 37, 331],
 ]
 
-li = [[int(l) for l in line.split(',')] for line in open("matrix.txt") ]
+li = [[int(l) for l in line.split(',')] for line in open("txt/matrix.txt") ]
 
 x = copy.deepcopy(li)
 
